@@ -216,6 +216,29 @@ export default function Home() {
           </div>
 
 
+          {/* PROCESSING INFORMATION */}
+
+          <div className="mx-auto mt-6 max-w-3xl rounded-2xl border border-yellow-500/30 bg-yellow-500/5 p-5">
+
+            <h3 className="text-lg font-semibold text-yellow-400">
+              ⏳ Why does detection take time?
+            </h3>
+
+            <p className="mt-3 text-sm leading-6 text-slate-400">
+              Our system uses YOLOv8 with PyTorch for object detection,
+              followed by Fuzzy Logic and a Genetic Algorithm for hybrid
+              processing. Since the application is running on a free
+              CPU-based server, YOLOv8 inference can take longer than usual.
+            </p>
+
+            <p className="mt-3 text-sm font-semibold text-slate-300">
+              Typical processing time: up to ~1 minute.
+              Please keep this page open while your image is being processed.
+            </p>
+
+          </div>
+
+
           {/* ERROR */}
 
           {error && (
