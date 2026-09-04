@@ -1,9 +1,4 @@
-import torch
 from ultralytics import YOLO
-
-# Prevent excessive CPU thread overhead on small Render instances
-torch.set_num_threads(1)
-torch.set_num_interop_threads(1)
 
 
 class YOLODetector:
