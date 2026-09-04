@@ -9,7 +9,7 @@ class YOLODetector:
     def predict(self, image):
         return self.model(
             image,
-            imgsz=640,
+            imgsz=416,
             device="cpu",
             verbose=False
         )
