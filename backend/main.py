@@ -1,6 +1,7 @@
 import os
 import base64
 import random
+import time
 
 import cv2
 import numpy as np
@@ -113,6 +114,8 @@ def health():
 @app.post("/detect")
 async def detect(file: UploadFile = File(...)):
 
+    request_start = time.perf_counter()
+
     # --------------------------------------------------------
     # Check uploaded file
     # --------------------------------------------------------
@@ -153,9 +156,15 @@ async def detect(file: UploadFile = File(...)):
         # YOLO Detection
         # ----------------------------------------------------
 
+        yolo_start = time.perf_counter()
+
         results = detector.predict(image)
 
         detections = extract_detections(results)
+
+        yolo_time = time.perf_counter() - yolo_start
+
+        print(f"YOLO time: {yolo_time:.2f} seconds")
 
         # ----------------------------------------------------
         # Fuzzy Logic
@@ -228,9 +237,14 @@ async def detect(file: UploadFile = File(...)):
 
                 fuzzy_filtered.append(det)
 
+        fuzzy_time = time.perf_counter() - yolo_start - yolo_time
+        print(f"Fuzzy/processing time: {fuzzy_time:.2f} seconds")
+
         # ----------------------------------------------------
         # Genetic Algorithm
         # ----------------------------------------------------
+
+        ga_start = time.perf_counter()
 
         if fuzzy_filtered:
 
@@ -247,6 +261,9 @@ async def detect(file: UploadFile = File(...)):
             best_threshold = 0.5
 
             history = []
+
+        ga_time = time.perf_counter() - ga_start
+        print(f"GA time: {ga_time:.2f} seconds")
 
         # ----------------------------------------------------
         # Final Hybrid Filtering
@@ -335,6 +352,8 @@ async def detect(file: UploadFile = File(...)):
         # Convert Image to Base64
         # ----------------------------------------------------
 
+        encoding_start = time.perf_counter()
+
         success, encoded_image = cv2.imencode(
             ".jpg",
             output_image
@@ -350,6 +369,9 @@ async def detect(file: UploadFile = File(...)):
         output_base64 = base64.b64encode(
             encoded_image.tobytes()
         ).decode("utf-8")
+
+        encoding_time = time.perf_counter() - encoding_start
+        print(f"Encoding time: {encoding_time:.2f} seconds")
 
         # ----------------------------------------------------
         # Prepare Detection Results
@@ -398,6 +420,9 @@ async def detect(file: UploadFile = File(...)):
         # ----------------------------------------------------
         # Return Response
         # ----------------------------------------------------
+
+        total_time = time.perf_counter() - request_start
+        print(f"TOTAL REQUEST TIME: {total_time:.2f} seconds")
 
         return {
 
